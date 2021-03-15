@@ -51,3 +51,5 @@
 
 (package! org-ref)
 (package! helm-bibtex)
+(package! color)
+(package! paren)
