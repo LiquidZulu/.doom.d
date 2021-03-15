@@ -1,21 +1,21 @@
 
 # Table of Contents
 
-1.  [Introduction](#org996eeea)
-    1.  [Modifying this config](#orgec51878)
-    2.  [Why Doom?](#org01b3818)
-2.  [Preamble](#org0abba66)
-3.  [Key Mapping](#orga256c03)
-4.  [Maximising Frame on Windows](#orga0e1808)
-5.  [Only Show Encoding When Not UTF-8](#org449988d)
-6.  [Package Config](#org451ebb2)
-    1.  [Splashcii](#org2e44782)
-    2.  [org-ref](#orgeb80f58)
-    3.  [helm-bibtex](#orgb29c022)
+1.  [Introduction](#orgf5c90d8)
+    1.  [Modifying this config](#orgc0f9f95)
+    2.  [Why Doom?](#org9d95dd1)
+2.  [Preamble](#orgec0e756)
+3.  [Key Mapping](#org2c60954)
+4.  [Maximising Frame on Windows](#org8ffd956)
+5.  [Only Show Encoding When Not UTF-8](#org6a5ad07)
+6.  [Package Config](#org5839ed3)
+    1.  [Splashcii](#orgbd19c71)
+    2.  [org-ref](#org478c49e)
+    3.  [helm-bibtex](#orge3d87af)
 
 
 
-<a id="org996eeea"></a>
+<a id="orgf5c90d8"></a>
 
 # Introduction
 
@@ -24,21 +24,21 @@ This is my config for [Doom Emacs](https://github.com/hlissner/doom-emacs)
 > &#x2026;a configuration framework for GNU Emacs tailored for Emacs bankruptcy veterans who want less framework in their frameworks, a modicum of stability (and reproducibility) from their package manager, and the performance of a hand rolled config (or better). It can be a foundation for your own config or a resource for Emacs enthusiasts to learn more about our favorite operating system.
 
 
-<a id="orgec51878"></a>
+<a id="orgc0f9f95"></a>
 
 ## Modifying this config
 
 `config.org` contains a number of source blocks that may be modified at will, `config.el` will automatically load all elisp source contained in `README.org`.
 
 
-<a id="org01b3818"></a>
+<a id="org9d95dd1"></a>
 
 ## Why Doom?
 
 You will notice from a perusing of `init.el` that I have disabled [Evil Mode](https://www.emacswiki.org/emacs/Evil), so I am clearly not on Doom for the vi bindings. I use Doom for the speed and to avoid bankruptcy &#x2014; vanilla bindings are good enough in most areas though I have modified the movement to make sense on Colemak-DHm.
 
 
-<a id="org0abba66"></a>
+<a id="orgec0e756"></a>
 
 # Preamble
 
@@ -55,7 +55,7 @@ I don&rsquo;t want all of my orgfiles on my c drive, I like to keep them here
 
     (setq org-directory "e:/emacs/documents/notes/org")
 
-This determines the style of line numbers in effect. If set to \`nil&rsquo;, line numbers are disabled. For relative line numbers, set this to \`relative&rsquo;.
+This determines the style of line numbers in effect. If set to `nil`, line numbers are disabled. For relative line numbers, set this to `relative`.
 
     (setq display-line-numbers-type t)
 
@@ -78,7 +78,7 @@ Some settings
     (setq line-spacing 0.3)                 ; seems like a nice line spacing balance.
 
 
-<a id="orga256c03"></a>
+<a id="org2c60954"></a>
 
 # Key Mapping
 
@@ -102,7 +102,7 @@ I use [Colemak-DHm](https://colemakmods.github.io/mod-dh/) &#x2013; my specific 
         )
 
 
-<a id="orga0e1808"></a>
+<a id="org8ffd956"></a>
 
 # Maximising Frame on Windows
 
@@ -125,7 +125,7 @@ on linux but adding this
 makes it work on win 10.
 
 
-<a id="org449988d"></a>
+<a id="org6a5ad07"></a>
 
 # Only Show Encoding When Not UTF-8
 
@@ -138,12 +138,12 @@ I basically only use UTF-8 so it takes up space for no reason most of the time.
     (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 
 
-<a id="org451ebb2"></a>
+<a id="org5839ed3"></a>
 
 # Package Config
 
 
-<a id="org2e44782"></a>
+<a id="orgbd19c71"></a>
 
 ## Splashcii
 
@@ -173,7 +173,7 @@ Splashcii is a CLI program that generates random ASCII splashart, you need to do
     ;; (setq +fl/splashcii-query "space")
 
 
-<a id="orgeb80f58"></a>
+<a id="org478c49e"></a>
 
 ## org-ref
 
@@ -205,7 +205,7 @@ org-ref is necessary for writing of any sort of academic material in emacs, make
     ))) )
 
 
-<a id="orgb29c022"></a>
+<a id="orge3d87af"></a>
 
 ## helm-bibtex
 

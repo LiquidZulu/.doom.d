@@ -27,7 +27,7 @@ I don't want all of my orgfiles on my c drive, I like to keep them here
 (setq org-directory "e:/emacs/documents/notes/org")
 #+end_src
 
-This determines the style of line numbers in effect. If set to `nil', line numbers are disabled. For relative line numbers, set this to `relative'.
+This determines the style of line numbers in effect. If set to =nil=, line numbers are disabled. For relative line numbers, set this to =relative=.
 #+begin_src elisp
 (setq display-line-numbers-type t)
 #+end_src
