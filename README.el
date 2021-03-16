@@ -175,7 +175,7 @@
     "M-n"   #'backward-word
     "M-e"   #'forward-word
 
-    "C-M-l" #'(lambda () (interactive) (previous-line) (beginning-of-line))
+    "M-C-l" #'(lambda () (interactive) (previous-line) (beginning-of-line))
     "C-M-u" #'(lambda () (interactive) (next-line)     (end-of-line))
     "C-M-n" #'backward-paragraph
     "C-M-e" #'forward-paragraph

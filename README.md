@@ -1,39 +1,40 @@
 
 # Table of Contents
 
-1.  [Introduction](#org54703ea)
-    1.  [Modifying this config](#org2887be3)
-    2.  [Why Doom?](#org8e939f4)
-2.  [Lexical Binding](#org928a8de)
-3.  [Helper Functions](#org787677e)
-    1.  [:function](#org9ce7e4e)
-    2.  [:command](#orge82ff20)
-    3.  [:after](#org4956f1a)
-    4.  [:hook](#orgdc1d3fc)
-    5.  [:push](#org027dfde)
-    6.  [:bind](#org4122e10)
-4.  [Settings](#org72434a4)
-    1.  [email](#org9128a0a)
-    2.  [org-directory](#orgcfdc99c)
-    3.  [line number style](#orgbe0217e)
-    4.  [various misc setings](#org891f426)
-    5.  [Autosaves](#org227f99d)
-    6.  [Prettify symbols](#orgaac2bf1)
-    7.  [Parenthesis Settings](#orgb9e57b5)
-        1.  [Rainbow Delimiters](#orgfae73a5)
-        2.  [Highlight Matching Bracket](#org3312507)
-5.  [Key Mapping](#orga690deb)
-6.  [Maximising Frame on Windows](#org954056b)
-7.  [Only Show Encoding When Not UTF-8](#org3094da1)
-8.  [Add Default Preamble to New Orgmode Files](#org015650a)
-9.  [Package Config](#org56b2741)
-    1.  [Splashcii](#org6c70032)
-    2.  [org-ref](#orged57521)
-    3.  [helm-bibtex](#org248de68)
+1.  [Introduction](#org2197acb)
+    1.  [Modifying this config](#org6538331)
+    2.  [Why Doom?](#org059b853)
+2.  [Lexical Binding](#org24f9dc2)
+3.  [Helper Functions](#orgf58b069)
+    1.  [:function](#orgb968281)
+    2.  [:command](#org4dea61c)
+    3.  [:after](#org76d1e92)
+    4.  [:hook](#orgfd13d76)
+    5.  [:push](#org2bc24b5)
+    6.  [:bind](#orgfb45b1c)
+4.  [Settings](#org20867a1)
+    1.  [email](#org4da1464)
+    2.  [org-directory](#org298da9c)
+    3.  [line number style](#org35398b1)
+    4.  [various misc setings](#org8cfe631)
+    5.  [Autosaves](#org139b6cf)
+    6.  [Prettify symbols](#org64dbfb1)
+    7.  [Parenthesis Settings](#org3157ca8)
+        1.  [Rainbow Delimiters](#org7d0a8f0)
+        2.  [Highlight Matching Bracket](#org7f38271)
+5.  [Key Mapping](#org4c682a8)
+6.  [Maximising Frame on Windows](#orgf7e545c)
+7.  [Only Show Encoding When Not UTF-8](#org206e261)
+8.  [Add Default Preamble to New Orgmode Files](#org9a404d9)
+9.  [Package Config](#org238e98f)
+    1.  [Splashcii](#orgb4ab68f)
+    2.  [org-ref](#org7bc8ebc)
+    3.  [helm-bibtex](#org771d1de)
+
+*This file is best viewed in [emacs](https://www.gnu.org/software/emacs/)!*
 
 
-
-<a id="org54703ea"></a>
+<a id="org2197acb"></a>
 
 # Introduction
 
@@ -42,21 +43,21 @@ This is my config for [Doom Emacs](https://github.com/hlissner/doom-emacs)
 > &#x2026;a configuration framework for GNU Emacs tailored for Emacs bankruptcy veterans who want less framework in their frameworks, a modicum of stability (and reproducibility) from their package manager, and the performance of a hand rolled config (or better). It can be a foundation for your own config or a resource for Emacs enthusiasts to learn more about our favorite operating system.
 
 
-<a id="org2887be3"></a>
+<a id="org6538331"></a>
 
 ## Modifying this config
 
 `config.org` contains a number of source blocks that may be modified at will, `config.el` will automatically load all elisp source contained in `README.org`.
 
 
-<a id="org8e939f4"></a>
+<a id="org059b853"></a>
 
 ## Why Doom?
 
 You will notice from a perusing of `init.el` that I have disabled [Evil Mode](https://www.emacswiki.org/emacs/Evil), so I am clearly not on Doom for the vi bindings. I use Doom for the speed and to avoid bankruptcy &#x2014; vanilla bindings are good enough in most areas though I have modified the movement to make sense on Colemak-DHm.
 
 
-<a id="org928a8de"></a>
+<a id="org24f9dc2"></a>
 
 # Lexical Binding
 
@@ -65,14 +66,14 @@ Enable Lexical Binding
     ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 
-<a id="org787677e"></a>
+<a id="orgf58b069"></a>
 
 # Helper Functions
 
 I got these from [Dustin Lacewell&rsquo;s init.el](https://dustinlacewell.github.io/emacs.d/). I dont use most of these but its nice to have them if im going to be taxing things from his init.
 
 
-<a id="org9ce7e4e"></a>
+<a id="orgb968281"></a>
 
 ## :function
 
@@ -98,7 +99,7 @@ Make non-interactive functions out of forms or a symbol.
           (_ `(lambda () ,@body) ))))
 
 
-<a id="orge82ff20"></a>
+<a id="org4dea61c"></a>
 
 ## :command
 
@@ -124,7 +125,7 @@ Make interactive commands out of forms or a symbol.
           (_ `(lambda () (interactive) ,@body) ))))
 
 
-<a id="org4956f1a"></a>
+<a id="org76d1e92"></a>
 
 ## :after
 
@@ -136,7 +137,7 @@ Defer some forms until the given package is loaded.
       `(with-eval-after-load ',package ,@body))
 
 
-<a id="orgdc1d3fc"></a>
+<a id="orgfd13d76"></a>
 
 ## :hook
 
@@ -159,7 +160,7 @@ Register some forms or a symbol with a hook.
         `(add-hook ',hook-sym ,body nil ,local)))
 
 
-<a id="org027dfde"></a>
+<a id="org2bc24b5"></a>
 
 ## :push
 
@@ -172,7 +173,7 @@ A wrapper around add-to-list.
         `(add-to-list ,sym ,body)))
 
 
-<a id="org4122e10"></a>
+<a id="orgfb45b1c"></a>
 
 ## :bind
 
@@ -194,12 +195,12 @@ Bind some forms or a symbol to a key. (I use map! instead)
         (_ `(global-set-key (kbd ,key) ,(eval `(:command ,@body))))))
 
 
-<a id="org72434a4"></a>
+<a id="org20867a1"></a>
 
 # Settings
 
 
-<a id="org9128a0a"></a>
+<a id="org4da1464"></a>
 
 ## email
 
@@ -209,7 +210,7 @@ Email and username, some functionality uses this to identify you, e.g. GPG confi
           user-mail-address "liquidzulu@pm.me")
 
 
-<a id="orgcfdc99c"></a>
+<a id="org298da9c"></a>
 
 ## org-directory
 
@@ -218,7 +219,7 @@ I don&rsquo;t want all of my orgfiles on my c drive, I like to keep them here
     (setq org-directory "e:/emacs/documents/notes/org")
 
 
-<a id="orgbe0217e"></a>
+<a id="org35398b1"></a>
 
 ## line number style
 
@@ -227,7 +228,7 @@ This determines the style of line numbers in effect. If set to `nil`, line numbe
     (setq display-line-numbers-type t)
 
 
-<a id="org891f426"></a>
+<a id="org8cfe631"></a>
 
 ## various misc setings
 
@@ -250,7 +251,7 @@ Blah
     (setq line-spacing 0.3)                    ; seems like a nice line spacing balance.
 
 
-<a id="org227f99d"></a>
+<a id="org139b6cf"></a>
 
 ## Autosaves
 
@@ -260,19 +261,19 @@ Blah
      auto-save-interval 20) ; or every 20 keystrokes
 
 
-<a id="orgaac2bf1"></a>
+<a id="org64dbfb1"></a>
 
 ## Prettify symbols
 
     (global-prettify-symbols-mode 1)
 
 
-<a id="orgb9e57b5"></a>
+<a id="org3157ca8"></a>
 
 ## Parenthesis Settings
 
 
-<a id="orgfae73a5"></a>
+<a id="org7d0a8f0"></a>
 
 ### Rainbow Delimiters
 
@@ -326,7 +327,7 @@ Took this from ldle&rsquo;s init, found [here](https://dustinlacewell.github.io/
       (:hook prog-mode 'rainbow-delimiters-mode))
 
 
-<a id="org3312507"></a>
+<a id="org7f38271"></a>
 
 ### Highlight Matching Bracket
 
@@ -340,7 +341,7 @@ Took this from ldle&rsquo;s init, found [here](https://dustinlacewell.github.io/
       (set-face-attribute 'show-paren-mismatch nil :weight 'extra-bold))
 
 
-<a id="orga690deb"></a>
+<a id="org4c682a8"></a>
 
 # Key Mapping
 
@@ -357,7 +358,7 @@ I use [Colemak-DHm](https://colemakmods.github.io/mod-dh/) &#x2013; my specific 
         "M-n"   #'backward-word
         "M-e"   #'forward-word
     
-        "C-M-l" #'(lambda () (interactive) (previous-line) (beginning-of-line))
+        "M-C-l" #'(lambda () (interactive) (previous-line) (beginning-of-line))
         "C-M-u" #'(lambda () (interactive) (next-line)     (end-of-line))
         "C-M-n" #'backward-paragraph
         "C-M-e" #'forward-paragraph
@@ -369,7 +370,7 @@ I use [Colemak-DHm](https://colemakmods.github.io/mod-dh/) &#x2013; my specific 
         )
 
 
-<a id="org954056b"></a>
+<a id="orgf7e545c"></a>
 
 # Maximising Frame on Windows
 
@@ -392,7 +393,7 @@ on linux but adding this
 makes it work on win 10.
 
 
-<a id="org3094da1"></a>
+<a id="org206e261"></a>
 
 # Only Show Encoding When Not UTF-8
 
@@ -405,7 +406,7 @@ I basically only use UTF-8 so it takes up space for no reason most of the time.
     (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 
 
-<a id="org015650a"></a>
+<a id="org9a404d9"></a>
 
 # Add Default Preamble to New Orgmode Files
 
@@ -413,7 +414,7 @@ I dont like to type out all that crap on my own
 
     (setq
      org-preamble (format
-                   "#+TITLE:\n#+AUTHOR:LiquidZulu\n#+BIBLIOGRAPHY:e:/Zotero/library.bib\n#+PANDOC_OPTIONS: csl:e:/Zotero/styles/australasian-physical-and-engineering-sciences-in-medicine.csl\n#+DATE:%s"
+                   "#+TITLE:\n#+AUTHOR:LiquidZulu\n#+BIBLIOGRAPHY:e:/Zotero/library.bib\n#+PANDOC_OPTIONS: csl:e:/Zotero/styles/australasian-physical-and-engineering-sciences-in-medicine.csl\n#+DATE:%s\n/This file is best viewed in [[https://www.gnu.org/software/emacs/][emacs]]!/"
                    (current-time-string)))
     
     (add-hook 'find-file-hook
@@ -432,12 +433,12 @@ I dont like to type out all that crap on my own
                         (insert org-preamble)))))
 
 
-<a id="org56b2741"></a>
+<a id="org238e98f"></a>
 
 # Package Config
 
 
-<a id="org6c70032"></a>
+<a id="orgb4ab68f"></a>
 
 ## Splashcii
 
@@ -467,7 +468,7 @@ Splashcii is a CLI program that generates random ASCII splashart, you need to do
     ;; (setq +fl/splashcii-query "space")
 
 
-<a id="orged57521"></a>
+<a id="org7bc8ebc"></a>
 
 ## org-ref
 
@@ -499,7 +500,7 @@ org-ref is necessary for writing of any sort of academic material in emacs, make
     ))) )
 
 
-<a id="org248de68"></a>
+<a id="org771d1de"></a>
 
 ## helm-bibtex
 

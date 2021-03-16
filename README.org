@@ -1,4 +1,5 @@
 #+TILTE:LiquidZulu's Doom Config
+/This file is best viewed in [[https://www.gnu.org/software/emacs/][emacs]]!/
 
 * Introduction
 This is my config for [[https://github.com/hlissner/doom-emacs][Doom Emacs]]
@@ -256,7 +257,7 @@ I use [[https://colemakmods.github.io/mod-dh/][Colemak-DHm]] -- my specific layo
     "M-n"   #'backward-word
     "M-e"   #'forward-word
 
-    "C-M-l" #'(lambda () (interactive) (previous-line) (beginning-of-line))
+    "M-C-l" #'(lambda () (interactive) (previous-line) (beginning-of-line))
     "C-M-u" #'(lambda () (interactive) (next-line)     (end-of-line))
     "C-M-n" #'backward-paragraph
     "C-M-e" #'forward-paragraph
@@ -302,7 +303,7 @@ I dont like to type out all that crap on my own
 #+begin_src elisp
 (setq
  org-preamble (format
-               "#+TITLE:\n#+AUTHOR:LiquidZulu\n#+BIBLIOGRAPHY:e:/Zotero/library.bib\n#+PANDOC_OPTIONS: csl:e:/Zotero/styles/australasian-physical-and-engineering-sciences-in-medicine.csl\n#+DATE:%s"
+               "#+TITLE:\n#+AUTHOR:LiquidZulu\n#+BIBLIOGRAPHY:e:/Zotero/library.bib\n#+PANDOC_OPTIONS: csl:e:/Zotero/styles/australasian-physical-and-engineering-sciences-in-medicine.csl\n#+DATE:%s\n/This file is best viewed in [[https://www.gnu.org/software/emacs/][emacs]]!/"
                (current-time-string)))
 
 (add-hook 'find-file-hook
