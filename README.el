@@ -206,8 +206,8 @@
 
 (setq
  org-preamble (format
-               "#+TITLE:\n#+AUTHOR:LiquidZulu\n#+BIBLIOGRAPHY:e:/Zotero/library.bib\n#+PANDOC_OPTIONS: csl:e:/Zotero/styles/australasian-physical-and-engineering-sciences-in-medicine.csl\n#+DATE:%s"
-               (current-time-string)))
+               "#+TITLE:\n#+AUTHOR:LiquidZulu\n#+BIBLIOGRAPHY:e:/Zotero/library.bib\n#+PANDOC_OPTIONS: csl:e:/Zotero/styles/australasian-physical-and-engineering-sciences-in-medicine.csl\n#+DATE:%s\n/This file is best viewed in [[https://www.gnu.org/software/emacs/][emacs]]!/"
+               (format-time-string "%F %Z")))
 
 (add-hook 'find-file-hook
           (lambda ()
@@ -222,7 +222,16 @@
                     (=
                      (buffer-size)
                      0)
-                    (insert org-preamble)))))
+                    ((lambda ()
+                       (insert org-preamble)
+
+                       ; navigate point to end of #+TITLE:, doesnt work when launching from gitbash for some reason, point just moves right back down after doom does something
+                       (goto-line 1)
+                       (forward-word)
+                       (forward-char)))))))
+
+; ¯\_(ツ)_/¯
+; TODO I think the relevant search term for #+FOO: is keyword but cant find any function that edits them nice and simple, if not ill need to search for it manually which will be a massive pain
 
 ;; splashcii
 (defvar +fl/splashcii-query ""
