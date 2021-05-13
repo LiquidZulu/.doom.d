@@ -83,77 +83,54 @@
 (setq user-full-name "LiquidZulu"
       user-mail-address "liquidzulu@pm.me")
 
+(setq org-image-actual-width 500)
+
+(setq
+ doom-font      (font-spec :family "Mononoki" :size 24)
+ doom-big-font  (font-spec :family "Mononoki" :size 36))
+
+(setq org-export-headline-levels 512)
+
 (setq org-directory "e:/emacs/documents/notes/org")
+
+(setq org-startup-with-inline-images t)
+
+(setq org-image-actual-width 500)
 
 (setq display-line-numbers-type t)
 
-(setq-default
-    delete-by-moving-to-trash t            ; Delete files to trash
-    tab-width 4                            ; Set width for tabs
-    uniquify-buffer-name-style 'forward    ; Uniquify buffer names
-    window-combination-resize t            ; take new window space from all other windows (not just current)
-    x-stretch-cursor t)                    ; Stretch cursor to the glyph width
+(setq delete-by-moving-to-trash t)           ; Delete files to trash
+(setq tab-width 4)                            ; Set width for tabs
+(setq uniquify-buffer-name-style 'forward)    ; Uniquify buffer names
+(setq window-combination-resize t)            ; take new window space from all other windows (not just current)
+(setq x-stretch-cursor t)                    ; Stretch cursor to the glyph width
 
-(setq undo-limit 80000000                  ; Raise undo-limit to 80Mb
-    evil-want-fine-undo t                  ; By default while in insert all changes are one big blob. Be more granular
-    auto-save-default t                    ; Nobody likes to loose work, I certainly don't
-    inhibit-compacting-font-caches t       ; When there are lots of glyphs, keep them in memory
-    truncate-string-ellipsis "…")          ; Unicode ellispis are nicer than "...", and also save /precious/ space
+(setq undo-limit 80000000)                    ; Raise undo-limit to 80Mb
+(setq evil-want-fine-undo t)                  ; By default while in insert all changes are one big blob. Be more granular
+(setq auto-save-default t)                    ; Nobody likes to loose work, I certainly don't
+(setq inhibit-compacting-font-caches t)       ; When there are lots of glyphs, keep them in memory
+(setq truncate-string-ellipsis "…")          ; Unicode ellispis are nicer than "...", and also save /precious/ space
 
 (delete-selection-mode 1)                  ; Replace selection when inserting text
 (setq line-spacing 0.3)                    ; seems like a nice line spacing balance.
 
-(setq
- auto-save-default t
- auto-save-timeout 20   ; every 20 secs
- auto-save-interval 20) ; or every 20 keystrokes
+(setq auto-save-default t)
+(setq auto-save-timeout 20)   ; every 20 secs
+(setq auto-save-interval 20)  ; or every 20 keystrokes
 
 (global-prettify-symbols-mode 1)
 
-(require 'color)
-(defun gen-col-list (length s v &optional hval)
-  (cl-flet ( (random-float () (/ (random 10000000000) 10000000000.0))
-          (mod-float (f) (- f (ffloor f))) )
-    (unless hval
-      (setq hval (random-float)))
-    (let ((golden-ratio-conjugate (/ (- (sqrt 5) 1) 2))
-          (h hval)
-          (current length)
-          (ret-list '()))
-      (while (> current 0)
-        (setq ret-list
-              (append ret-list
-                      (list (apply 'color-rgb-to-hex (color-hsl-to-rgb h s v)))))
-        (setq h (mod-float (+ h golden-ratio-conjugate)))
-        (setq current (- current 1)))
-      ret-list)))
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
-(defun set-random-rainbow-colors (s l &optional h)
-  ;; Output into message buffer in case you get a scheme you REALLY like.
-  ;; (message "set-random-rainbow-colors %s" (list s l h))
-  (interactive)
-  (rainbow-delimiters-mode t)
-
-  ;; Show mismatched braces in bright red.
-  (set-face-background 'rainbow-delimiters-unmatched-face "red")
-
-  ;; Rainbow delimiters based on golden ratio
-  (let ( (colors (gen-col-list 9 s l h))
-         (i 1) )
-    (let ( (length (length colors)) )
-      ;;(message (concat "i " (number-to-string i) " length " (number-to-string length)))
-      (while (<= i length)
-        (let ( (rainbow-var-name (concat "rainbow-delimiters-depth-" (number-to-string i) "-face"))
-               (col (nth i colors)) )
-          ;; (message (concat rainbow-var-name " => " col))
-          (set-face-foreground (intern rainbow-var-name) col))
-        (setq i (+ i 1))))))
-
-(use-package rainbow-delimiters :commands rainbow-delimiters-mode :hook ...
-  :init
-  (setq rainbow-delimiters-max-face-count 16)
-  (set-random-rainbow-colors 0.6 0.7 0.5)
-  (:hook prog-mode 'rainbow-delimiters-mode))
+(setq rainbow-delimiters-depth-1-face "FF1D1A")
+(setq rainbow-delimiters-depth-2-face "FF243A")
+(setq rainbow-delimiters-depth-3-face "FF5D38")
+(setq rainbow-delimiters-depth-4-face "FFC72E")
+(setq rainbow-delimiters-depth-5-face "FFD724")
+(setq rainbow-delimiters-depth-6-face "33FFEB")
+(setq rainbow-delimiters-depth-7-face "75FFD6")
+(setq rainbow-delimiters-depth-8-face "FFFB7A")
+(setq rainbow-delimiters-depth-9-face "FFF1C7")
 
 (require 'paren)
 (show-paren-mode 1)
@@ -164,27 +141,53 @@
   (set-face-attribute 'show-paren-match nil :weight 'extra-bold)
   (set-face-attribute 'show-paren-mismatch nil :weight 'extra-bold))
 
+(setq w32-apps-modifier 'hyper)
+(setq w32-lwindow-modifier 'super)
+(setq w32-rwindow-modifier 'hyper)
+
 (map!
-    "C-l"   #'beginning-of-line
-    "C-u"   #'end-of-line
-    "C-n"   #'backward-char
-    "C-e"   #'forward-char
+ "C-l"          #'beginning-of-line
+ "C-u"          #'end-of-line
+ "C-n"          #'backward-char
+ "C-e"          #'forward-char
 
-    "M-l"   #'previous-line
-    "M-u"   #'next-line
-    "M-n"   #'backward-word
-    "M-e"   #'forward-word
+ "M-l"          #'previous-line
+ "M-u"          #'next-line
+ "M-n"          #'backward-word
+ "M-e"          #'forward-word
 
-    "M-C-l" #'(lambda () (interactive) (previous-line) (beginning-of-line))
-    "C-M-u" #'(lambda () (interactive) (next-line)     (end-of-line))
-    "C-M-n" #'backward-paragraph
-    "C-M-e" #'forward-paragraph
+ "C-M-s-l"      #'(lambda () (interactive) (previous-line) (beginning-of-line))
+ "C-M-s-u"      #'(lambda () (interactive) (next-line)     (end-of-line))
+ "C-M-s-n"      #'backward-paragraph
+ "C-M-s-e"      #'forward-paragraph
 
-    ;; "C-M-x f a"   #'helm-bibtex         ; "find article" : opens up helm bibtex for search.
-    ;; "C-M-x o n"   #'org-noter           ; "org noter"  : opens up org noter in a headline
-    ;; "C-M-x r c i" #'org-clock-in        ; "routine clock in" : clock in to a habit.
-    ;; "C-M-x c b"   #'beacon-blink        ; "cursor blink" : makes the beacon-blink
-    )
+ "C-;"          #'org-footnote-action
+
+ "C-M-s-d"      #'centaur-tabs-backward
+ "C-M-s-v"      #'centaur-tabs-forward
+ "C-M-s-t"      #'centaur-tabs-select-beg-tab
+ "C-M-s-g"      #'centaur-tabs-select-end-tab
+ "C-M-s-k"      #'centaur-tabs--kill-this-buffer-dont-ask
+
+ "C-x t t"      #'treemacs
+
+ "C-c i i"      #'(lambda () (interactive) (insert "#+CAPTION:\n#+NAME:\n[[./images]]") (backward-char) (backward-char) "Insert image")  ; "insert image"
+
+ "C-M-s-x r i"      #'org-toggle-inline-images  ; "render image"
+ "C-M-s-x p p j a"  #'json-pretty-print-buffer-ordered
+ "C-M-s-x p p j r"  #'json-pretty-print-ordered
+
+ "C-M-s-<backspace>" #'(lambda () (interactive) (beginning-of-line) (org-delete-backward-char 1) (org-self-insert-command))
+
+ "M-y" #'yank ; I keep accidently pressing this instead of C-y, and I hate it, it breaks everything
+
+                                        ;"C-RET"    #'(lambda () (interactive) (+org/insert-item-below) (org-return))
+
+ ;; "C-M-x f a"   ;#'helm-bibtex         ; "find article" : opens up helm bibtex for search.
+ ;; "C-M-x o n"   ;#'org-noter           ; "org noter"  : opens up org noter in a headline
+ ;; "C-M-x r c i" ;#'org-clock-in        ; "routine clock in" : clock in to a habit.
+ ;; "C-M-x c b"   ;#'beacon-blink        ; "cursor blink" : makes the beacon-blink
+ )
 
 (if (eq initial-window-system 'x)       ; if started by emacs command or desktop file
     (toggle-frame-maximized))
@@ -205,9 +208,11 @@
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 
 (setq
+ org-css "file:///e:/emacs/documents/org-css/css/org.css")
+(setq
  org-preamble (format
-               "#+TITLE:\n#+AUTHOR:LiquidZulu\n#+BIBLIOGRAPHY:e:/Zotero/library.bib\n#+PANDOC_OPTIONS: csl:e:/Zotero/styles/australasian-physical-and-engineering-sciences-in-medicine.csl\n#+DATE:%s\n/This file is best viewed in [[https://www.gnu.org/software/emacs/][emacs]]!/"
-               (format-time-string "%F %Z")))
+               "#+TITLE:\n#+AUTHOR:LiquidZulu\n#+BIBLIOGRAPHY:e:/Zotero/library.bib\n#+PANDOC_OPTIONS: csl:e:/Zotero/styles/australasian-physical-and-engineering-sciences-in-medicine.csl\n#+HTML_HEAD:<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\"/>\n/This file is best viewed in [[https://www.gnu.org/software/emacs/][emacs]]!/"
+               org-css))
 
 (add-hook 'find-file-hook
           (lambda ()
@@ -225,13 +230,37 @@
                     ((lambda ()
                        (insert org-preamble)
 
-                       ; navigate point to end of #+TITLE:, doesnt work when launching from gitbash for some reason, point just moves right back down after doom does something
+                                        ; navigate point to end of #+TITLE:, doesnt work when launching from gitbash for some reason, point just moves right back down after doom does something
                        (goto-line 1)
                        (forward-word)
                        (forward-char)))))))
 
 ; ¯\_(ツ)_/¯
 ; TODO I think the relevant search term for #+FOO: is keyword but cant find any function that edits them nice and simple, if not ill need to search for it manually which will be a massive pain
+
+(setq
+ md-preamble
+ "---\nslug:\ntitle:\nauthor: Liquidzulu\nauthor_title: Anarcho-Capitalist YouTuber\nauthor_url: https://www.youtube.com/channel/UCTf0py7ryuSldOsDm4abSsg\nauthor_image_url: https://yt3.ggpht.com/ytc/AAUvwngTBrwImrEHOckgvAV4I45tRm4-lPRC-X0KvsAT9w=s176-c-k-c0x00ffffff-no-rj\ntags: []\n---")
+
+(add-hook 'find-file-hook
+          (lambda ()
+            (if
+                (string=
+                 (substring
+                  (buffer-name)
+                  (if (> (length (buffer-name)) 3) (- (length (buffer-name)) 3) 0)
+                  nil)
+                 "mdx")
+                (if
+                    (=
+                     (buffer-size)
+                     0)
+                    ((lambda ()
+                       (insert md-preamble)
+
+                       (goto-line 2)
+                       (forward-word)
+                       (forward-char)))))))
 
 ;; splashcii
 (defvar +fl/splashcii-query ""
@@ -255,6 +284,10 @@
 (setcar (nthcdr 0 +doom-dashboard-functions) #'+fl/doom-banner)
 
 ;; (setq +fl/splashcii-query "space")
+
+(require 'ox-json)
+
+                                        ;(add-hook 'org-mode-hook #'org-make-toc-mode) ; automatically update toc
 
 (use-package! org-ref
     :after org
