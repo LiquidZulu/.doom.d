@@ -1,5 +1,26 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
+(defun footnote-template ()
+  (if (and
+       (string=
+        (substring
+         (thing-at-point 'line t)
+         0
+         4)
+        "[fn:")
+       (string=
+        (substring
+         (thing-at-point 'line t)
+         -3
+         nil)
+        "]\n")
+       )
+      (lambda () (interactive)
+        (insert "[[][]] ([[][archived]])")
+        (dotimes
+            (i 19)
+          (backward-char)))))
+
 (defmacro :function (&rest body)
   (if (->> body length (< 1))
       `(lambda () ,@body)
@@ -85,6 +106,18 @@
 
 (setq org-image-actual-width 500)
 
+(custom-set-faces
+ '(rainbow-delimiters-depth-1-face ((t (:foreground "#FF5F5C"))))
+ '(rainbow-delimiters-depth-2-face ((t (:foreground "#FFF1C7"))))
+ '(rainbow-delimiters-depth-3-face ((t (:foreground "#5E807F"))))
+ '(rainbow-delimiters-depth-4-face ((t (:foreground "#33FFEB"))))
+ '(rainbow-delimiters-depth-5-face ((t (:foreground "#FF5D38"))))
+ '(rainbow-delimiters-depth-6-face ((t (:foreground "#FFC72E"))))
+ '(rainbow-delimiters-depth-7-face ((t (:foreground "#75FFD6"))))
+ '(rainbow-delimiters-depth-8-face ((t (:foreground "#2996F5"))))
+ '(rainbow-delimiters-depth-9-face ((t (:foreground "#FFFB7A"))))
+ )
+
 (setq
  doom-font      (font-spec :family "Mononoki" :size 24)
  doom-big-font  (font-spec :family "Mononoki" :size 36))
@@ -120,18 +153,6 @@
 
 (global-prettify-symbols-mode 1)
 
-(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-
-(setq rainbow-delimiters-depth-1-face "FF1D1A")
-(setq rainbow-delimiters-depth-2-face "FF243A")
-(setq rainbow-delimiters-depth-3-face "FF5D38")
-(setq rainbow-delimiters-depth-4-face "FFC72E")
-(setq rainbow-delimiters-depth-5-face "FFD724")
-(setq rainbow-delimiters-depth-6-face "33FFEB")
-(setq rainbow-delimiters-depth-7-face "75FFD6")
-(setq rainbow-delimiters-depth-8-face "FFFB7A")
-(setq rainbow-delimiters-depth-9-face "FFF1C7")
-
 (require 'paren)
 (show-paren-mode 1)
 (setq show-paren-delay 0)
@@ -144,6 +165,7 @@
 (setq w32-apps-modifier 'hyper)
 (setq w32-lwindow-modifier 'super)
 (setq w32-rwindow-modifier 'hyper)
+(setq zulu-scroll-amount 5)
 
 (map!
  "C-l"          #'beginning-of-line
@@ -156,12 +178,15 @@
  "M-n"          #'backward-word
  "M-e"          #'forward-word
 
+ "M-m"          #'(lambda () (interactive) (dotimes (i zulu-scroll-amount) (scroll-up-line)))
+ "M-j"          #'(lambda () (interactive) (dotimes (i zulu-scroll-amount) (scroll-down-line)))
+
  "C-M-s-l"      #'(lambda () (interactive) (previous-line) (beginning-of-line))
  "C-M-s-u"      #'(lambda () (interactive) (next-line)     (end-of-line))
  "C-M-s-n"      #'backward-paragraph
  "C-M-s-e"      #'forward-paragraph
 
- "C-;"          #'org-footnote-action
+ "C-;"          #'(lambda () (interactive) (footnote-template) (org-footnote-action))
 
  "C-M-s-d"      #'centaur-tabs-backward
  "C-M-s-v"      #'centaur-tabs-forward
@@ -172,6 +197,8 @@
  "C-x t t"      #'treemacs
 
  "C-c i i"      #'(lambda () (interactive) (insert "#+CAPTION:\n#+NAME:\n[[./images]]") (backward-char) (backward-char) "Insert image")  ; "insert image"
+ "C-C i t r"    #'org-table-create-or-convert-from-region
+ "C-C i t e"    #'org-table-create-with-table.el
 
  "C-M-s-x r i"      #'org-toggle-inline-images  ; "render image"
  "C-M-s-x p p j a"  #'json-pretty-print-buffer-ordered
@@ -201,6 +228,8 @@
     (w32-send-sys-command 61488)))
 (add-hook 'window-setup-hook 'maximize-frame t)
 
+(add-to-list 'auto-mode-alist '("\\.mdx\\'" . markdown-mode))
+
 (defun doom-modeline-conditional-buffer-encoding ()
   (setq-local doom-modeline-buffer-encoding
               (unless (or (eq buffer-file-coding-system 'utf-8-unix)
@@ -211,7 +240,7 @@
  org-css "file:///e:/emacs/documents/org-css/css/org.css")
 (setq
  org-preamble (format
-               "#+TITLE:\n#+AUTHOR:LiquidZulu\n#+BIBLIOGRAPHY:e:/Zotero/library.bib\n#+PANDOC_OPTIONS: csl:e:/Zotero/styles/australasian-physical-and-engineering-sciences-in-medicine.csl\n#+HTML_HEAD:<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\"/>\n/This file is best viewed in [[https://www.gnu.org/software/emacs/][emacs]]!/"
+               "#+TITLE:\n#+AUTHOR:LiquidZulu\n#+BIBLIOGRAPHY:e:/Zotero/library.bib\n#+PANDOC_OPTIONS: csl:e:/Zotero/styles/australasian-physical-and-engineering-sciences-in-medicine.csl\n#+HTML_HEAD:<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\"/>\n#+OPTIONS: ^:{}\n#+begin_comment\n/This file is best viewed in [[https://www.gnu.org/software/emacs/][emacs]]!/\n#+end_comment"
                org-css))
 
 (add-hook 'find-file-hook
@@ -284,6 +313,142 @@
 (setcar (nthcdr 0 +doom-dashboard-functions) #'+fl/doom-banner)
 
 ;; (setq +fl/splashcii-query "space")
+
+(setq my-credentials-file "~/.private.el")
+
+(defun freenode-password (server)
+  (with-temp-buffer
+    (insert-file-contents-literally my-credentials-file)
+    (plist-get (read (buffer-string)) :freenode-password)))
+
+(setq circe-network-options
+      '(("Freenode" :host "chat.freenode.net" :port (6667 . 6697)
+         :tls t
+         :nick "LiquidZulu"
+         :sasl-username "LiquidZulu"
+         :sasl-password freenode-password
+         :channels (
+                    "#philosophy"
+                    "#idleRPG"
+                    "#physics"
+                    "#science"
+                    "#emacs"
+                    "#"
+                    )
+
+         )))
+
+(setq circe-use-cycle-completion t)
+
+(defun circe-network-connected-p (network)
+  "Return non-nil if there's any Circe server-buffer whose
+`circe-server-netwok' is NETWORK."
+  (catch 'return
+    (dolist (buffer (circe-server-buffers))
+      (with-current-buffer buffer
+        (if (string= network circe-server-network)
+            (throw 'return t))))))
+
+(defun circe-maybe-connect (network)
+  "Connect to NETWORK, but ask user for confirmation if it's
+already been connected to."
+  (interactive "sNetwork: ")
+  (if (or (not (circe-network-connected-p network))
+          (y-or-n-p (format "Already connected to %s, reconnect?" network)))
+      (circe network)))
+
+(defun irc ()
+  "Connect to IRC"
+  (interactive)
+  (circe-maybe-connect "Freenode"))
+
+(setq circe-format-say "<{nick}> {body}")
+
+(setq circe-format-self-say "<{nick}> {body}")
+
+(setq circe-format-message "{nick} -> {chattarget}: {body}")
+
+(setq circe-format-self-message "{nick} -> {chattarget}: {body}")
+
+(setq circe-format-action "* <{nick}> {body}")
+
+(setq circe-format-self-action "* <{nick}> {body}")
+
+(setq circe-format-message-action "* <{nick}> {body}")
+
+(setq circe-chat-buffer-name "{target}@{network}")
+
+(setq circe-server-buffer-name "{host}:{port}")
+
+(setq circe-format-notice "-{nick}- {body}")
+
+(setq circe-format-server-notice "--SERVER-- {body}")
+
+(setq circe-format-server-topic "*** Topic change by {nick} ({userhost}): {old-topic} -> {new-topic} | {topic-diff}")
+
+(setq circe-format-server-lurker-activity "*** First activity: {nick} joined {joindelta} ago ({jointime}).")
+
+(setq circe-format-server-join "*** Join: {nick} ({userinfo})")
+
+(setq circe-format-server-join-in-channel "*** Join: {nick} ({userinfo}) joined {channel}")
+
+(setq circe-format-server-rejoin "*** Re-join: {nick} ({userinfo}), left {departuredelta} ago ({departuretime}).")
+
+(setq circe-format-server-whois-idle-with-signon "*** {whois-nick} is {idle-duration} idle (signon on {signon-date}, {signon-ago} ago)")
+
+(setq circe-format-server-whois-idle "*** {whois-nick} is {idle-duration} idle")
+
+(setq circe-format-server-topic-time "*** Topic set by {setter} on {topic-date}, {topic-ago} ago")
+
+(setq circe-format-server-topic-time-for-channel "*** Topic for {channel} set by {setter} on {topic-date}, {topic-ago} ago")
+
+(setq circe-format-server-channel-creation-time "*** Channel {channel} created on {date}, {ago} ago")
+
+(setq circe-format-server-ctcp "*** CTCP {command} request from {nick} ({userhost}) to {target}: {body}")
+
+(setq circe-format-server-ctcp-ping "*** CTCP PING request from {nick} ({userhost}) to {target}: {body} ({ago} ago)")
+
+(setq circe-format-server-ctcp-ping-reply "*** CTCP PING reply from {nick} ({userhost}) to {target}: {ago} ago ({body})")
+
+(setq circe-format-server-netsplit "*** Netsplit: {split} (Use /WL to see who left)")
+
+(setq circe-format-server-netmerge "*** Netmerge: {split}, split {ago} ago (Use /WL to see who's still missing)")
+
+(setq circe-format-server-mode-change "*** Mode change: {change} on {target} by {setter} ({userhost})")
+
+(setq circe-format-server-nick-change-self "*** Nick change: You are now known as {new-nick}")
+
+(setq circe-format-server-nick-change "*** Nick change: {old-nick} ({userhost}) is now known as {new-nick}")
+
+(setq circe-format-server-nick-regain "*** Nick regain: {old-nick} ({userhost}) is now known as {new-nick}")
+
+(setq circe-format-server-part "*** Part: {nick} ({userhost}) left {channel}: {reason}")
+
+(setq circe-format-server-quit-channel "*** Quit: {nick} ({userhost}) left {channel}: {reason}")
+
+(setq circe-format-server-quit "*** Quit: {nick} ({userhost}) left IRC: {reason}")
+
+(setq
+ lui-time-stamp-position 'right-margin
+ lui-time-stamp-format "%H:%M")
+
+(add-hook 'lui-mode-hook 'my-circe-set-margin)
+(defun my-circe-set-margin ()
+  (setq right-margin-width 5))
+
+(setq
+ lui-time-stamp-position 'right-margin
+ lui-fill-type nil)
+
+(add-hook 'lui-mode-hook 'my-lui-setup)
+(defun my-lui-setup ()
+  (setq
+   fringes-outside-margins t
+   right-margin-width 5
+   word-wrap t
+   wrap-prefix "    "))
+
+(setf (cdr (assoc 'continuation fringe-indicator-alist)) nil)
 
 (require 'ox-json)
 
