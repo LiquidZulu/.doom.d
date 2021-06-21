@@ -159,22 +159,25 @@ Sets inline images to be 500 wide
 #+begin_src elisp
 (setq org-image-actual-width 500)
 #+end_src
-** custom-set-faces
+** Theme
 #+begin_src elisp
-(custom-set-faces
- '(rainbow-delimiters-depth-1-face ((t (:foreground "#FF5F5C"))))
- '(rainbow-delimiters-depth-2-face ((t (:foreground "#FFF1C7"))))
- '(rainbow-delimiters-depth-3-face ((t (:foreground "#5E807F"))))
- '(rainbow-delimiters-depth-4-face ((t (:foreground "#33FFEB"))))
- '(rainbow-delimiters-depth-5-face ((t (:foreground "#FF5D38"))))
- '(rainbow-delimiters-depth-6-face ((t (:foreground "#FFC72E"))))
- '(rainbow-delimiters-depth-7-face ((t (:foreground "#75FFD6"))))
- '(rainbow-delimiters-depth-8-face ((t (:foreground "#2996F5"))))
- '(rainbow-delimiters-depth-9-face ((t (:foreground "#FFFB7A"))))
- )
+        (setq doom-theme 'doom-copper)
 #+end_src
 
-#+RESULTS:
+** custom-set-faces
+#+begin_src elisp
+(custom-set-faces!
+ '(rainbow-delimiters-depth-1-face :foreground "#FF5F5C")
+ '(rainbow-delimiters-depth-2-face :foreground "#FFF1C7")
+ '(rainbow-delimiters-depth-3-face :foreground "#5E807F")
+ '(rainbow-delimiters-depth-4-face :foreground "#33FFEB")
+ '(rainbow-delimiters-depth-5-face :foreground "#FF5D38")
+ '(rainbow-delimiters-depth-6-face :foreground "#FFC72E")
+ '(rainbow-delimiters-depth-7-face :foreground "#75FFD6")
+ '(rainbow-delimiters-depth-8-face :foreground "#2996F5")
+ '(rainbow-delimiters-depth-9-face :foreground "#FFFB7A")
+ )
+#+end_src
 
 ** Font stuff
 *** Font-Family
@@ -345,7 +348,6 @@ I basically only use UTF-8 so it takes up space for no reason most of the time.
                           (eq buffer-file-coding-system 'utf-8)))))
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 #+end_src
-
 * Default Preambles
 ** Add Default Preamble to New Orgmode Files
 I dont like to type out all that crap on my own
@@ -411,33 +413,16 @@ Similar to above, I like docusaurus
                        (forward-word)
                        (forward-char)))))))
 #+end_src
-* Package Config
-** Splashcii
-Splashcii is a CLI program that generates random ASCII splashart, you need to download it [[https://github.com/folke/splashcii][here]] for this to work.
+* Babel Settings
+** Languages
 #+begin_src elisp
-;; splashcii
-(defvar +fl/splashcii-query ""
-  "The query to search on asciiur.com")
-
-(defun +fl/splashcii ()
-  (split-string (with-output-to-string
-                  (call-process "splashcii" nil standard-output nil +fl/splashcii-query))
-                "\n" t))
-
-(defun +fl/doom-banner ()
-  (let ((point (point)))
-    (mapc (lambda (line)
-            (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
-                                'face 'doom-dashboard-banner) " ")
-            (insert "\n"))
-          (+fl/splashcii))
-    (insert (make-string (or (cdr +doom-dashboard-banner-padding) 0) ?\n))))
-
-;; override the first doom dashboard function
-(setcar (nthcdr 0 +doom-dashboard-functions) #'+fl/doom-banner)
-
-;; (setq +fl/splashcii-query "space")
+(org-babel-do-load-languages
+      'org-babel-load-languages
+      '(
+        (C . t)
+        (js . t)))
 #+end_src
+* Package Config
 ** circe
 *** Login Config
 Keeping my passwords out of my public config.
@@ -527,14 +512,14 @@ The format for normal channel or query talk.
 + nick - The nick talking.
 + body - The message.
 #+begin_src elisp
-(setq circe-format-message "{nick} -> {chattarget}: {body}")
+(setq circe-format-message "<{nick}> → <{chattarget}>: {body}")
 #+end_src
 
 The format for messages sent to other people outside of queries.
 + chattarget - The target nick.
 + body - The body of the message.
 #+begin_src elisp
-(setq circe-format-self-message "{nick} -> {chattarget}: {body}")
+(setq circe-format-self-message "<{nick}> → <{chattarget}>: {body}")
 #+end_src
 
 ***** Actions
@@ -564,7 +549,7 @@ The format for buffer names.
 + target  - The target of the buffer.
 + network - The name of the network.
 #+begin_src elisp
-(setq circe-chat-buffer-name "{target}@{network}")
+(setq circe-chat-buffer-name "{target}")
 #+end_src
 
 The format for the server buffer name.
@@ -599,7 +584,7 @@ The format for topic changes.
 + old-topic  - The previous topic
 + topic-diff - A colorized diff of the topics
 #+begin_src elisp
-(setq circe-format-server-topic "*** Topic change by {nick} ({userhost}): {old-topic} -> {new-topic} | {topic-diff}")
+(setq circe-format-server-topic "*** Topic change by {nick} ({userhost}): {old-topic} → {new-topic} | {topic-diff}")
 #+end_src
 
 ***** Lurkers
@@ -896,4 +881,50 @@ Helm BibTeX is a package that allows for searching through BibTeX bibliographies
       bibtex-completion-library-path '("e:/Zotero/")
      ; bibtex-completion-notes-path "~/Dropbox/Org/references/articles.org"  ;; not needed anymore as I take notes in org-roam
       )
+#+end_src
+
+* Open Buffers Upon Launch
+I want to have my buffer list populated with oft-used files so that I dont have to open them by hand with dired every time.
+
+/Note: the further down the file is opened the higher it will appear in the ibuffer menu./
+** zulu-open-directory
+#+begin_src elisp
+(defun zulu-open-directory-looper (list dir)
+  "A helper function for zulu-open-directory containing the loop logic"
+  (while list
+    (dired (concat dir "/" (car list)))
+    (setq list (cdr list))))
+(defun zulu-open-directory (dir)
+"Opens all level-1 subfolders in (dir) as dired buffers."
+(zulu-open-directory-looper (directory-files dir) dir))
+#+end_src
+
+#+RESULTS:
+: zulu-open-directory
+
+** IRC
+See: [[Quick IRC Command]].
+#+begin_src elisp
+(irc)
+#+end_src
+** Documents
+#+begin_src elisp
+(zulu-open-directory "e:/emacs/documents/youtube-scripts/scripts")
+(zulu-open-directory "e:/emacs/documents/notes/org")
+(zulu-open-directory "e:/emacs/documents/agenda")
+#+end_src
+** Config Files
+#+begin_src elisp
+(find-file "~/.doom.d/README.org")
+#+end_src
+** Splash Screen
+This is where I make my custom splash screen, I put it at the end so that it opens last. See [[https://github.com/hlissner/doom-emacs/issues/2204][this issue]], and [[https://github.com/tecosaur/emacs-config/blob/master/config.org#splash-screen][this repo]] ([[https://github.com/tecosaur/emacs-config/blob/46a5ffdc92728cb03e61987b9f4de04a87c4dc5d/config.org][this branch specifically]]) for my inspo.
+*** Making The Splash Screen
+#+begin_src elisp
+(setq fancy-splash-image (expand-file-name "misc/splash-images/blackhole-lines.png" doom-private-dir))
+#+end_src
+
+*** Switching To It
+#+begin_src elisp
+(switch-to-buffer "*doom*")
 #+end_src

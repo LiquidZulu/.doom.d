@@ -106,16 +106,18 @@
 
 (setq org-image-actual-width 500)
 
-(custom-set-faces
- '(rainbow-delimiters-depth-1-face ((t (:foreground "#FF5F5C"))))
- '(rainbow-delimiters-depth-2-face ((t (:foreground "#FFF1C7"))))
- '(rainbow-delimiters-depth-3-face ((t (:foreground "#5E807F"))))
- '(rainbow-delimiters-depth-4-face ((t (:foreground "#33FFEB"))))
- '(rainbow-delimiters-depth-5-face ((t (:foreground "#FF5D38"))))
- '(rainbow-delimiters-depth-6-face ((t (:foreground "#FFC72E"))))
- '(rainbow-delimiters-depth-7-face ((t (:foreground "#75FFD6"))))
- '(rainbow-delimiters-depth-8-face ((t (:foreground "#2996F5"))))
- '(rainbow-delimiters-depth-9-face ((t (:foreground "#FFFB7A"))))
+        (setq doom-theme 'doom-copper)
+
+(custom-set-faces!
+ '(rainbow-delimiters-depth-1-face :foreground "#FF5F5C")
+ '(rainbow-delimiters-depth-2-face :foreground "#FFF1C7")
+ '(rainbow-delimiters-depth-3-face :foreground "#5E807F")
+ '(rainbow-delimiters-depth-4-face :foreground "#33FFEB")
+ '(rainbow-delimiters-depth-5-face :foreground "#FF5D38")
+ '(rainbow-delimiters-depth-6-face :foreground "#FFC72E")
+ '(rainbow-delimiters-depth-7-face :foreground "#75FFD6")
+ '(rainbow-delimiters-depth-8-face :foreground "#2996F5")
+ '(rainbow-delimiters-depth-9-face :foreground "#FFFB7A")
  )
 
 (setq
@@ -206,6 +208,8 @@
 
  "C-M-s-<backspace>" #'(lambda () (interactive) (beginning-of-line) (org-delete-backward-char 1) (org-self-insert-command))
 
+ "C-M-s-b" #'ibuffer
+
  "M-y" #'yank ; I keep accidently pressing this instead of C-y, and I hate it, it breaks everything
 
                                         ;"C-RET"    #'(lambda () (interactive) (+org/insert-item-below) (org-return))
@@ -291,28 +295,11 @@
                        (forward-word)
                        (forward-char)))))))
 
-;; splashcii
-(defvar +fl/splashcii-query ""
-  "The query to search on asciiur.com")
-
-(defun +fl/splashcii ()
-  (split-string (with-output-to-string
-                  (call-process "splashcii" nil standard-output nil +fl/splashcii-query))
-                "\n" t))
-
-(defun +fl/doom-banner ()
-  (let ((point (point)))
-    (mapc (lambda (line)
-            (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
-                                'face 'doom-dashboard-banner) " ")
-            (insert "\n"))
-          (+fl/splashcii))
-    (insert (make-string (or (cdr +doom-dashboard-banner-padding) 0) ?\n))))
-
-;; override the first doom dashboard function
-(setcar (nthcdr 0 +doom-dashboard-functions) #'+fl/doom-banner)
-
-;; (setq +fl/splashcii-query "space")
+(org-babel-do-load-languages
+      'org-babel-load-languages
+      '(
+        (C . t)
+        (js . t)))
 
 (setq my-credentials-file "~/.private.el")
 
@@ -366,9 +353,9 @@ already been connected to."
 
 (setq circe-format-self-say "<{nick}> {body}")
 
-(setq circe-format-message "{nick} -> {chattarget}: {body}")
+(setq circe-format-message "<{nick}> → <{chattarget}>: {body}")
 
-(setq circe-format-self-message "{nick} -> {chattarget}: {body}")
+(setq circe-format-self-message "<{nick}> → <{chattarget}>: {body}")
 
 (setq circe-format-action "* <{nick}> {body}")
 
@@ -376,7 +363,7 @@ already been connected to."
 
 (setq circe-format-message-action "* <{nick}> {body}")
 
-(setq circe-chat-buffer-name "{target}@{network}")
+(setq circe-chat-buffer-name "{target}")
 
 (setq circe-server-buffer-name "{host}:{port}")
 
@@ -384,7 +371,7 @@ already been connected to."
 
 (setq circe-format-server-notice "--SERVER-- {body}")
 
-(setq circe-format-server-topic "*** Topic change by {nick} ({userhost}): {old-topic} -> {new-topic} | {topic-diff}")
+(setq circe-format-server-topic "*** Topic change by {nick} ({userhost}): {old-topic} → {new-topic} | {topic-diff}")
 
 (setq circe-format-server-lurker-activity "*** First activity: {nick} joined {joindelta} ago ({jointime}).")
 
@@ -499,3 +486,24 @@ already been connected to."
       bibtex-completion-library-path '("e:/Zotero/")
      ; bibtex-completion-notes-path "~/Dropbox/Org/references/articles.org"  ;; not needed anymore as I take notes in org-roam
       )
+
+(defun zulu-open-directory-looper (list dir)
+  "A helper function for zulu-open-directory containing the loop logic"
+  (while list
+    (dired (concat dir "/" (car list)))
+    (setq list (cdr list))))
+(defun zulu-open-directory (dir)
+"Opens all level-1 subfolders in (dir) as dired buffers."
+(zulu-open-directory-looper (directory-files dir) dir))
+
+(irc)
+
+(zulu-open-directory "e:/emacs/documents/youtube-scripts/scripts")
+(zulu-open-directory "e:/emacs/documents/notes/org")
+(zulu-open-directory "e:/emacs/documents/agenda")
+
+(find-file "~/.doom.d/README.org")
+
+(setq fancy-splash-image (expand-file-name "misc/splash-images/blackhole-lines.png" doom-private-dir))
+
+(switch-to-buffer "*doom*")
